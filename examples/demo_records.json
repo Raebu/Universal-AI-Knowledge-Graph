@@ -1,0 +1,26 @@
+[
+  {
+    "id": "crm-001",
+    "title": "Acme Corp renewal risk",
+    "company": "Acme Corp",
+    "system": "crm",
+    "note": "Acme Corp renewal is at risk because procurement needs an ISO 27001 security review before contract signature.",
+    "owner": "sales"
+  },
+  {
+    "id": "slack-001",
+    "title": "Security review decision",
+    "channel": "#platform",
+    "system": "slack",
+    "message": "The platform team agreed that all GitHub pull requests touching ingestion connectors require security review.",
+    "owner": "engineering"
+  },
+  {
+    "id": "github-001",
+    "title": "Connector SDK issue",
+    "repo": "Universal-AI-Knowledge-Graph",
+    "system": "github",
+    "issue": "Add read-only Slack connector with least-privilege OAuth scopes and audit logging.",
+    "owner": "platform"
+  }
+]
