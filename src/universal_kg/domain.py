@@ -5,7 +5,7 @@ from enum import StrEnum
 from typing import Any
 from uuid import uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class SourceType(StrEnum):
@@ -32,13 +32,25 @@ class EntityType(StrEnum):
     DATABASE_TABLE = "database_table"
 
 
-class DocumentIn(BaseModel):
-    workspace_id: str = Field(min_length=1)
+class StrictModel(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+
+class DocumentIn(StrictModel):
+    workspace_id: str = Field(min_length=1, max_length=128, pattern=r"^[a-zA-Z0-9_.:-]+$")
     source: SourceType | str
-    external_id: str | None = None
-    title: str
-    body: str
+    external_id: str | None = Field(default=None, max_length=512)
+    title: str = Field(min_length=1, max_length=512)
+    body: str = Field(min_length=1, max_length=2_000_000)
     metadata: dict[str, Any] = Field(default_factory=dict)
+
+    @field_validator("source")
+    @classmethod
+    def validate_source(cls, value: SourceType | str) -> SourceType | str:
+        source = str(value)
+        if len(source) > 64 or not source.replace("-", "_").replace("_", "").isalnum():
+            raise ValueError("source must be a short alphanumeric connector name")
+        return value
 
 
 class Document(BaseModel):
@@ -80,9 +92,9 @@ class Relationship(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
-class SearchRequest(BaseModel):
-    workspace_id: str
-    query: str
+class SearchRequest(StrictModel):
+    workspace_id: str = Field(min_length=1, max_length=128, pattern=r"^[a-zA-Z0-9_.:-]+$")
+    query: str = Field(min_length=1, max_length=8_000)
     limit: int = Field(default=10, ge=1, le=50)
     include_graph: bool = True
 
