@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "universal-ai-knowledge-graph"
+version = "0.1.0"
+description = "Enterprise semantic knowledge graph for AI-searchable business knowledge."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [{name = "Raeburn AI"}]
+dependencies = [
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+  "pydantic>=2.8.0",
+  "pydantic-settings>=2.4.0",
+  "sqlalchemy>=2.0.32",
+  "psycopg[binary]>=3.2.1",
+  "pgvector>=0.3.2",
+  "alembic>=1.13.2",
+  "httpx>=0.27.0",
+  "python-multipart>=0.0.9",
+  "structlog>=24.4.0",
+  "tenacity>=8.5.0",
+  "orjson>=3.10.7",
+  "networkx>=3.3",
+  "pypdf>=4.3.1",
+  "beautifulsoup4>=4.12.3",
+  "lxml>=5.2.2",
+  "typer>=0.12.3"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.2",
+  "pytest-asyncio>=0.23.8",
+  "ruff>=0.5.6",
+  "mypy>=1.11.1",
+  "types-beautifulsoup4>=4.12.0.20240511",
+  "coverage>=7.6.1"
+]
+openai = ["openai>=1.99.0"]
+
+[project.scripts]
+universal-kg = "universal_kg.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+mypy_path = "src"
+packages = ["universal_kg"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+asyncio_mode = "auto"
